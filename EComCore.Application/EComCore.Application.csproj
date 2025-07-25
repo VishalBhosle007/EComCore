@@ -7,9 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="DTOs\" />
-    <Folder Include="Interfaces\Repository\" />
-    <Folder Include="Interfaces\Services\" />
+    <ProjectReference Include="..\EComCore.Domain\EComCore.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="15.0.1" />
   </ItemGroup>
 
 </Project>
