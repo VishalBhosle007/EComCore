@@ -1,16 +1,20 @@
-using System.Net.Sockets;
-using System.Text;
+using AutoMapper;
+using EComCore.API.Middlewares;
 using EComCore.Application.Interfaces.Repository;
 using EComCore.Application.Interfaces.Services;
+using EComCore.Application.Mappings;
 using EComCore.Infrastructure.Data;
 using EComCore.Infrastructure.Identity;
 using EComCore.Infrastructure.Repository;
 using EComCore.Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.Text;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,11 +35,28 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 }).AddEntityFrameworkStores<AppDbContext>()
   .AddDefaultTokenProviders();
 
-
+// Disable the default automatic ModelState validation response from ASP.NET Core.
+builder.Services.Configure<ApiBehaviorOptions>(options =>
+{
+    options.SuppressModelStateInvalidFilter = true;
+});
 
 // Add services to the container.
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IProductService, ProductService>();
+
+// File storage
+builder.Services.AddSingleton<IFileStorageService, LocalFileStorageService>();
+
+//Add AutoMapper
+var mapperConfig = new MapperConfiguration(cfg =>
+{
+    cfg.AddProfile<AutoMapperProfiles>();
+});
+
+IMapper mapper = mapperConfig.CreateMapper();
+builder.Services.AddSingleton(mapper);
+
 
 
 // Add Controllers
@@ -125,8 +146,13 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();          // ? Enable Swagger UI
 }
 
+// Enable serving static files from wwwroot
+app.UseStaticFiles(); // <-- important for images in wwwroot
 
 app.UseHttpsRedirection();
+
+// Add Exception Middleware here
+app.UseMiddleware<ExceptionMiddleware>();
 
 app.UseAuthentication();
 app.UseAuthorization();

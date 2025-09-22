@@ -12,5 +12,10 @@ namespace EComCore.Domain.Entities
         [Column(TypeName = "decimal(18,2)")]
         public decimal Price { get; set; }
         public int QuentityInStock { get; set; }
+
+        // Navigation
+        public List<ProductImage> Images { get; set; } = new List<ProductImage>();
+
     }
 }
+

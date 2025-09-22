@@ -28,7 +28,6 @@ namespace EComCore.API.Controllers
         }
 
         [HttpPost("register")]
-        [ValidateModel]
         public async Task<IActionResult> Register(RegisterRequestDto dto)
         {
             var user = new ApplicationUser

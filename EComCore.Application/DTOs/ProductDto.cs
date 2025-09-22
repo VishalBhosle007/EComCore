@@ -13,5 +13,7 @@ namespace EComCore.Application.DTOs
         public string Description { get; set; }
         public decimal Price { get; set; }
         public int QuentityInStock { get; set; }
+
+        public List<ProductImageDto> Images { get; set; } = new();
     }
 }

@@ -19,11 +19,27 @@ namespace EComCore.Infrastructure.Data
         }
         public DbSet<ApplicationUser> Users { get; set; }
         public DbSet<Product> Products { get; set; }
+        public DbSet<ProductImage> ProductImages { get; set; } = default!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<Product>(b =>
+            {
+                b.HasKey(p => p.Id);
+                b.Property(p => p.Name).IsRequired().HasMaxLength(250);
+                b.HasMany(p => p.Images)
+                .WithOne(i => i.Product)
+                .HasForeignKey(i => i.ProductId)
+                .OnDelete(DeleteBehavior.Cascade); // cascade deletes DB rows
+            });
+            modelBuilder.Entity<ProductImage>(b =>
+            {
+                b.HasKey(i => i.Id);
+                b.Property(i => i.Path).IsRequired();
+            });
 
+
+            base.OnModelCreating(modelBuilder);
 
             #region Seed Product data
             var ProductList = new List<Product>()
