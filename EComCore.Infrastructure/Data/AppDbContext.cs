@@ -21,16 +21,26 @@ namespace EComCore.Infrastructure.Data
         public DbSet<Product> Products { get; set; }
         public DbSet<ProductImage> ProductImages { get; set; } = default!;
 
+        public DbSet<Category> Categories { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Product>(b =>
             {
                 b.HasKey(p => p.Id);
                 b.Property(p => p.Name).IsRequired().HasMaxLength(250);
+                
+                // Product with ProductImage (Cascade Delete)
                 b.HasMany(p => p.Images)
                 .WithOne(i => i.Product)
                 .HasForeignKey(i => i.ProductId)
                 .OnDelete(DeleteBehavior.Cascade); // cascade deletes DB rows
+
+                // Product with category (Cascade Off)
+                b.HasOne(p => p.Category)
+                .WithMany(c => c.Products)
+                .HasForeignKey(k => k.CategoryId)
+                .OnDelete(DeleteBehavior.Restrict);
             });
             modelBuilder.Entity<ProductImage>(b =>
             {

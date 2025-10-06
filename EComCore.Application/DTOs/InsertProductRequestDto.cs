@@ -22,6 +22,8 @@ namespace EComCore.Application.DTOs
         [Range(0, int.MaxValue, ErrorMessage = "Quantity must be 0 or more")]
         public int QuentityInStock { get; set; }
 
+        [Required(ErrorMessage = "CategoryId is required")]
+        public Guid CategoryId { get; set; }
 
         // This will contain file URLs/paths returned by upload API or direct cloud URLs
         public List<string> ImagePaths { get; set; } = new();

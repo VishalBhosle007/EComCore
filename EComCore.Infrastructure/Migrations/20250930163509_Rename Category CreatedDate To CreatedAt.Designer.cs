@@ -4,6 +4,7 @@ using EComCore.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EComCore.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250930163509_Rename Category CreatedDate To CreatedAt")]
+    partial class RenameCategoryCreatedDateToCreatedAt
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -55,9 +58,6 @@ namespace EComCore.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("CategoryId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -75,15 +75,12 @@ namespace EComCore.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CategoryId");
-
                     b.ToTable("Products");
 
                     b.HasData(
                         new
                         {
                             Id = new Guid("52265969-5f3a-465f-9f96-9024929452aa"),
-                            CategoryId = new Guid("00000000-0000-0000-0000-000000000000"),
                             Description = "This is seeding form dbcontext file for trial",
                             Name = "Product 1",
                             Price = 1200.00m,
@@ -92,7 +89,6 @@ namespace EComCore.Infrastructure.Migrations
                         new
                         {
                             Id = new Guid("520a39f7-ab21-409d-9664-1ce731117ef6"),
-                            CategoryId = new Guid("00000000-0000-0000-0000-000000000000"),
                             Description = "This is seeding form dbcontext file for trial",
                             Name = "Product 2",
                             Price = 1100.00m,
@@ -339,17 +335,6 @@ namespace EComCore.Infrastructure.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("EComCore.Domain.Entities.Product", b =>
-                {
-                    b.HasOne("EComCore.Domain.Entities.Category", "Category")
-                        .WithMany("Products")
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Category");
-                });
-
             modelBuilder.Entity("EComCore.Domain.Entities.ProductImage", b =>
                 {
                     b.HasOne("EComCore.Domain.Entities.Product", "Product")
@@ -410,11 +395,6 @@ namespace EComCore.Infrastructure.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("EComCore.Domain.Entities.Category", b =>
-                {
-                    b.Navigation("Products");
                 });
 
             modelBuilder.Entity("EComCore.Domain.Entities.Product", b =>

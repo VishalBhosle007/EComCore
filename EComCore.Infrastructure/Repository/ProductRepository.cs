@@ -46,7 +46,7 @@ namespace EComCore.Infrastructure.Repository
 
         public async Task<List<Product>> GetAllProductsAsync()
         {
-            return await dbContext.Products.Include(p => p.Images).ToListAsync();
+            return await dbContext.Products.Include(c => c.Category).Include(p => p.Images).ToListAsync();
         }
 
         public async Task<Product?> GetProductByIdAsync(Guid productId)
@@ -54,7 +54,7 @@ namespace EComCore.Infrastructure.Repository
             if (productId == Guid.Empty)
                 return null;
 
-            return await dbContext.Products.Include(p => p.Images)
+            return await dbContext.Products.Include(c => c.Category).Include(p => p.Images)
                 .FirstOrDefaultAsync(i => i.Id == productId);
         }
 
@@ -72,6 +72,7 @@ namespace EComCore.Infrastructure.Repository
             existing.Description = product.Description;
             existing.Price = product.Price;
             existing.QuentityInStock = product.QuentityInStock;
+            existing.CategoryId = product.CategoryId;
 
             // Determine image ids that should remain (those passed with Id != 0)
             var updatedImageIds = product.Images?.Where(i => i.Id != 0).Select(i => i.Id).ToList()

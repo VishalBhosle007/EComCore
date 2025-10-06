@@ -42,11 +42,17 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
 });
 
 // Add services to the container.
+// Product Services
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IProductService, ProductService>();
 
+//Category services
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
+
 // File storage
 builder.Services.AddSingleton<IFileStorageService, LocalFileStorageService>();
+
 
 //Add AutoMapper
 var mapperConfig = new MapperConfiguration(cfg =>

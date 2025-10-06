@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Azure.Core;
 using EComCore.Application.DTOs;
 using EComCore.Application.Exceptions;
 using EComCore.Application.Interfaces.Repository;
@@ -42,6 +43,7 @@ namespace EComCore.Infrastructure.Services
 
             if (addProductRequestDto.QuentityInStock < 0)
                 throw new ValidationException("Quantity cannot be negative.");
+
             #endregion
 
             var product = mapper.Map<Product>(addProductRequestDto);
@@ -58,6 +60,8 @@ namespace EComCore.Infrastructure.Services
 
             if (result == null)
                 throw new ValidationException("Something went wrong while creating the product.");
+
+            result = await productRepository.GetProductByIdAsync(result.Id);
 
             return mapper.Map<ProductDto>(result);
         }
@@ -170,6 +174,7 @@ namespace EComCore.Infrastructure.Services
                 Description = productDto.Description,
                 Price = productDto.Price,
                 QuentityInStock = productDto.QuentityInStock,
+                CategoryId = productDto.CategoryId,
                 Images = keptImages.Concat(newImages).ToList()
             };
 
@@ -178,6 +183,8 @@ namespace EComCore.Infrastructure.Services
 
             if (result == null)
                 throw new NotFoundException($"Product with id {id} was not found.");
+
+            result = await productRepository.GetProductByIdAsync(result.Id);
 
             return mapper.Map<ProductDto>(result);
         }

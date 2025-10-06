@@ -18,7 +18,7 @@ namespace EComCore.Application.Mappings
             //CreateMap<Product, UpdateProductRequestDto>().ReverseMap();
 
             // Domain -> DTO
-            CreateMap<Product, ProductDto>();
+            CreateMap<Product, ProductDto>().ReverseMap();
 
             CreateMap<ProductImage, ProductImageDto>();
 
@@ -34,6 +34,14 @@ namespace EComCore.Application.Mappings
             CreateMap<UpdateProductRequestDto, Product>()
                 .ForMember(dest => dest.Images,
                            opt => opt.MapFrom(src => src.NewImagePaths.Select(url => new ProductImage { Path = url })));
+
+
+            //==========    Category    ==========
+
+            CreateMap<Category, CategoryDto>().ReverseMap();
+            CreateMap<Category, InsertCategoryRequestDto>().ReverseMap();
+            CreateMap<Category, UpdateCategoryRequestDto>().ReverseMap();
+
         }
     }
 }

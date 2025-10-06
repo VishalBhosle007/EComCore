@@ -1,4 +1,5 @@
 ﻿
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace EComCore.Domain.Entities
@@ -13,9 +14,12 @@ namespace EComCore.Domain.Entities
         public decimal Price { get; set; }
         public int QuentityInStock { get; set; }
 
+        // category
+        public Guid CategoryId { get; set; }
+        public Category Category { get; set; }
+
         // Navigation
         public List<ProductImage> Images { get; set; } = new List<ProductImage>();
-
     }
 }
 
